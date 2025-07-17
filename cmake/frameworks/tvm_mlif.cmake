@@ -8,6 +8,16 @@ SET(EXTRA_SRC ml_interface_tvm.c)
 FILE(GLOB TVM_SRCS ${TVM_OUT_DIR}/src/*_lib*.c ${TVM_OUT_DIR}/src/*_lib*.cc)
 FILE(GLOB TVM_OBJS ${TVM_OUT_DIR}/lib/*_lib*.o)
 
+FOREACH(src in TVM_SRCS)
+    IF(DEFINED MLIF_OPTIMIZE_PER_FILE_${src})
+        set_source_files_properties(
+            ${src}
+            PROPERTIES
+            COMPILE_FLAGS -O${MLIF_OPTIMIZE_PER_FILE_${src}}
+        )
+    ENDIF()
+ENDFOREACH()
+
 IF(TVM_OBJS)
     COMMON_ADD_LIBRARY(tvm_extension_objs OBJECT IMPORTED)
 
