@@ -7,14 +7,26 @@ SET(EXTRA_SRC ml_interface_tvm.c)
 
 FILE(GLOB TVM_SRCS ${TVM_OUT_DIR}/src/*_lib*.c ${TVM_OUT_DIR}/src/*_lib*.cc)
 FILE(GLOB TVM_OBJS ${TVM_OUT_DIR}/lib/*_lib*.o)
+MESSAGE(STATUS "FILES: ${TVM_SRCS}")
+# SET(TVM_SRCS_LIST TVM_SRCS)
+# MESSAGE(STATUS "FILES SET: ${TVM_SRCS_LIST}")
 
-FOREACH(src in TVM_SRCS)
-    IF(DEFINED MLIF_OPTIMIZE_PER_FILE_${src})
+
+FOREACH(src IN LISTS TVM_SRCS)
+    get_filename_component(file_name "${src}" NAME)
+    
+    
+    MESSAGE(STATUS "DEBUG: Current file_name is: ${file_name}") 
+    #MESSAGE(STATUS "SETTING OPTIMIZE FLAG -O${MLIF_OPTIMIZE_PER_FILE_${file_name}} FOR (${file_name})")
+    IF(DEFINED MLIF_OPTIMIZE_PER_FILE_${file_name})
+        
+        MESSAGE(STATUS "SETTING OPTIMIZE FLAG -O${MLIF_OPTIMIZE_PER_FILE_${file_name}} FOR (${file_name})")
         set_source_files_properties(
             ${src}
             PROPERTIES
-            COMPILE_FLAGS -O${MLIF_OPTIMIZE_PER_FILE_${src}}
+            COMPILE_FLAGS -O${MLIF_OPTIMIZE_PER_FILE_${file_name}}
         )
+    
     ENDIF()
 ENDFOREACH()
 
